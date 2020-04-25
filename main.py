@@ -1,3 +1,5 @@
+import json
+
 import requests
 import time
 from tqdm import tqdm
@@ -123,14 +125,35 @@ class User:
         other_group_set = self.friends_groups()
         print('Собираем все вместе...')
         groups = group_set.difference(other_group_set)
-        print('Готово!')
-        print(f'Нашлось групп: {len(groups)}. \nВот они: {groups}')
         return groups
 
-
 def main():
+    """
+    функция принимает список групп
+    :return: возвращает файл groups.json
+    """
     user_into = input('Введите данные пользователя (id или domain): ')
     user = User(TOKEN, user_into)
-    user.compare_groups()
+    # user.compare_groups()
+    group_list = list(user.compare_groups())
+    to_json = {}
+    if len(group_list) != 0:
+        for id_group in group_list:
+            params = {
+                'access_token': TOKEN,
+                'group_ids': id_group,
+                'v': 5.52
+            }
+            response = requests.get(
+                'https://api.vk.com/method/groups.getById',
+                params
+            )
+            dict = response.json()
+            to_json[id_group] = dict['response']
+        with open('groups.json', 'w') as f:
+            json.dump(to_json, f, sort_keys=True, indent=2)
+        print('Программа завершена. Данные можно найти в файле groups.json')
+    else:
+        print('Упс! Таких групп нет(')
 
 main()
