@@ -5,9 +5,9 @@ import time
 from tqdm import tqdm
 
 # вводные:
-TOKEN = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008'
-user_id = 171691064
-user_domain = 'eshmargunov'
+TOKEN = '111'
+user_id = 111
+user_domain = '111'
 
 # тело программы:
 class User:
@@ -107,12 +107,10 @@ class User:
                 group_list = responce_dict['response']['groups']['items']
                 friends_groups_list.append(group_list)
                 time.sleep(0.4)
-            else:
-                continue
         all_groups = list()
-        for i in friends_groups_list:
-            for j in i:
-                all_groups.append(j)
+        for group in friends_groups_list:
+            for item in group:
+                all_groups.append(item)
         friends_groups_set = set(all_groups)
         return friends_groups_set
 
